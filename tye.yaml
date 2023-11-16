@@ -1,0 +1,30 @@
+name: redis-tests
+containerEngine: docker
+
+extensions:
+  - name: seq
+    logPath: ./.logs
+
+services:
+
+  - name: service-one
+    project: ServiceOne/ServiceOne.csproj
+    bindings:
+      - port: 5000
+        protocol: https
+
+  - name: service-two
+    project: ServiceTwo/ServiceTwo.csproj
+    bindings:
+      - port: 5001
+        protocol: https
+
+  - name: redis
+    image: redis
+    bindings:
+      - port: 6379
+        connectionString: "${host}:${port}"
+
+  - name: redis-cli
+    image: redis
+    args: "redis-cli -h redis MONITOR"
